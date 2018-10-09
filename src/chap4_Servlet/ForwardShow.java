@@ -39,10 +39,16 @@ public class ForwardShow extends HttpServlet
 		response.setContentType("text/html; charset=utf-8");
 		
 		String username = request.getParameter("username");
-		String password = request.getParameter("password");
+		String password = request.getParameter("password");	
+		String sessionId_1 = (String)request.getAttribute("sessionId_1");//获取ForwardServlet的sessionId
 		
-		HttpSession session = request.getSession();
-		String sessionId = session.getId();
+		if(null == sessionId_1)//如果sessionId_1为null，说明已经不是同一个request，是sendRedirect方式跳转过来的
+		{
+			sessionId_1 = request.getParameter("sessionId_1");//从sendRedirect所传的参数值获取ForwardServlet的sessionId
+		}
+		
+		HttpSession session_2 = request.getSession();//获取ForwardShow的sessionId
+		String sessionId_2 = session_2.getId();
 		
 		PrintWriter out = response.getWriter();
 		out.println("<html>");
@@ -52,9 +58,10 @@ public class ForwardShow extends HttpServlet
 		out.println("</head>");
 		out.println("<body>");
 		out.println("<p>这是通过forword后的界面</p>");
-		out.println("姓名：" + username);
-		out.println("密码：" + password);
-		out.println("sessionId：" + sessionId);
+		out.println("姓名：" + username + "<br>");
+		out.println("密码：" + password + "<br>");
+		out.println("ForwardServlet的sessionId值为：" + sessionId_1 + "<br>");
+		out.println("ForwardShow的sessionId值为：" + sessionId_2 + "<br>");
 		out.println("</body>");
 		out.println("</html>");
 	}
